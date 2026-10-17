@@ -3,16 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Directii · Navigare comunitară pe OpenStreetMap</title>
+    <title>Directii · Prima rețea socială auto</title>
     <meta
       name="description"
-      content="Directii îți găsește traseul, te ghidează cu voce viraj cu viraj și te anunță ce au raportat ceilalți șoferi: trafic, poliție, accidente, pericole."
+      content="Directii, prima rețea socială auto: navigare cu voce și rapoarte live de la șoferi. În curând: garajul tău, locurile în trend și idei de drum pentru weekend."
     />
     <meta name="theme-color" content="#002b7f" />
     <meta name="color-scheme" content="light dark" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Directii" />
-    <meta property="og:description" content="Navigare comunitară pe OpenStreetMap, cu ghidare vocală și rapoarte live de la șoferi." />
+    <meta property="og:title" content="Directii · Prima rețea socială auto" />
+    <meta
+      property="og:description"
+      content="Navigare cu voce și rapoarte live de la șoferi. În curând: garajul tău, locurile în trend și idei de drum pentru weekend."
+    />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="icon.png" />
     <style>
@@ -61,6 +64,17 @@
         --map-major-edge: #e6c591;
         --map-label: #857d70;
 
+        /* Badges: what's coming (orange-0/9) and what's here (teal-0/9) */
+        --soon-bg: #fff4e6;
+        --soon-text: #d9480f;
+        --now-bg: #e6fcf5;
+        --now-text: #087f5b;
+
+        /* The weekend card's landscape */
+        --sky: #dbe4ff;
+        --hill-far: #a9c9a0;
+        --hill-near: #74a96a;
+
         color-scheme: light;
         font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       }
@@ -102,6 +116,15 @@
           --map-major: #4a463e;
           --map-major-edge: #39362f;
           --map-label: #8a8a8a;
+
+          --soon-bg: rgb(253 126 20 / 0.16);
+          --soon-text: #ffa94d;
+          --now-bg: rgb(18 184 134 / 0.16);
+          --now-text: #63e6be;
+
+          --sky: #1f2638;
+          --hill-far: #2f3d2e;
+          --hill-near: #3d5638;
 
           color-scheme: dark;
         }
@@ -404,24 +427,55 @@
         place-items: center;
       }
 
-      /* Over the map left of the car, clear of the speedometer. */
-      .float-toast {
+      /* Cards floating over the phone's left edge, clear of the markers and the speedometer:
+         a peek at the social features to come. */
+      .float {
         position: absolute;
-        right: calc(50% + 70px);
-        top: 46%;
         z-index: 2;
-        padding: 10px 16px;
+        white-space: nowrap;
+        box-shadow: var(--shadow);
+      }
+
+      .float-trend {
+        right: calc(50% + 40px);
+        top: 24%;
+        padding: 8px 14px;
         border-radius: 999px;
         background: var(--toast);
         color: #fff;
         font-size: 14px;
         font-weight: 600;
-        white-space: nowrap;
-        box-shadow: var(--shadow);
+      }
+
+      .float-car {
+        right: calc(50% + 20px);
+        top: 44%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 16px;
+        background: var(--m-surface);
+        color: var(--m-text);
+        line-height: 1.25;
+      }
+
+      .float-car > span:first-child {
+        font-size: 26px;
+      }
+
+      .float-car b {
+        display: block;
+        font-size: 14px;
+      }
+
+      .float-car small {
+        color: var(--m-muted);
+        font-size: 12px;
       }
 
       @media (max-width: 1180px) {
-        .float-toast {
+        .float {
           display: none;
         }
       }
@@ -904,6 +958,331 @@
         .section {
           padding: 72px 0;
         }
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        vertical-align: middle;
+      }
+
+      /* Not in the app yet: ../todo.md */
+      .badge.soon {
+        background: var(--soon-bg);
+        color: var(--soon-text);
+      }
+
+      .badge.now {
+        background: var(--now-bg);
+        color: var(--now-text);
+      }
+
+      .kicker .badge {
+        margin-left: 8px;
+        font-size: 11px;
+      }
+
+      /* A Romanian (EU) number plate: the same in either theme, like the real thing. */
+      .plate {
+        display: inline-flex;
+        flex: none;
+        height: 26px;
+        overflow: hidden;
+        border: 2px solid #1a1b1e;
+        border-radius: 5px;
+        background: #fff;
+        color: #1a1b1e;
+        font: 800 13px/1 system-ui, sans-serif;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+      }
+
+      .plate i {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        width: 14px;
+        padding: 3px 0 2px;
+        background: #003399;
+        color: #fff;
+        font-size: 6.5px;
+        font-style: normal;
+        letter-spacing: 0;
+      }
+
+      .plate i::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border: 1.5px dotted #ffcc00;
+        border-radius: 50%;
+      }
+
+      .plate span {
+        display: flex;
+        align-items: center;
+        padding: 0 7px;
+      }
+
+      /* The auto social network: garage, trending places, a weekend idea */
+
+      .social {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+        gap: 20px;
+      }
+
+      .social-card {
+        display: flex;
+        flex-direction: column;
+        padding: 12px 12px 24px;
+        border-radius: 24px;
+        background: var(--surface);
+        box-shadow: inset 0 0 0 1px var(--border);
+      }
+
+      .social-visual {
+        display: grid;
+        align-content: center;
+        min-height: 284px;
+        margin-bottom: 20px;
+        padding: 16px;
+        border-radius: 16px;
+        background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+      }
+
+      .social-card .badge {
+        align-self: flex-start;
+        margin: 0 12px 10px;
+      }
+
+      .social-card h3 {
+        margin: 0 12px 6px;
+        font-size: 20px;
+        letter-spacing: -0.01em;
+      }
+
+      .social-card p {
+        margin: 0 12px;
+        color: var(--text-2);
+      }
+
+      .v-label {
+        margin: 0 0 8px 2px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .garage {
+        display: grid;
+        gap: 8px;
+      }
+
+      .garage-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: var(--m-surface);
+        color: var(--m-text);
+        box-shadow: var(--shadow);
+        line-height: 1.25;
+      }
+
+      .garage-row > span:first-child {
+        font-size: 24px;
+      }
+
+      .garage-row div {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .garage-row b {
+        display: block;
+        overflow: hidden;
+        font-size: 14px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .garage-row small {
+        color: var(--m-muted);
+        font-size: 12px;
+      }
+
+      .garage-add {
+        padding: 9px;
+        border: 1.5px dashed color-mix(in srgb, var(--accent-text) 45%, transparent);
+        border-radius: 14px;
+        color: var(--accent-text);
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .trend-card {
+        padding: 14px 14px 10px;
+        border-radius: 14px;
+        background: var(--m-surface);
+        color: var(--m-text);
+        box-shadow: var(--shadow);
+      }
+
+      .trend-card > b {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+      }
+
+      .trend {
+        display: grid;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: rank;
+      }
+
+      .trend li {
+        display: grid;
+        grid-template-columns: 18px minmax(0, 1fr) 64px;
+        align-items: center;
+        gap: 10px;
+        padding: 5px 0;
+        line-height: 1.25;
+      }
+
+      .trend li + li {
+        border-top: 1px solid color-mix(in srgb, var(--m-border) 50%, transparent);
+      }
+
+      .trend li::before {
+        counter-increment: rank;
+        content: counter(rank);
+        color: var(--m-muted);
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .trend li:first-child::before {
+        color: var(--report);
+      }
+
+      .trend b {
+        display: block;
+        font-size: 14px;
+      }
+
+      .trend small {
+        color: var(--m-muted);
+        font-size: 12px;
+      }
+
+      .trend i {
+        height: 6px;
+        overflow: hidden;
+        border-radius: 3px;
+        background: color-mix(in srgb, var(--route) 16%, transparent);
+      }
+
+      .trend i::after {
+        content: '';
+        display: block;
+        width: var(--w);
+        height: 100%;
+        border-radius: inherit;
+        background: var(--route);
+      }
+
+      .weekend {
+        overflow: hidden;
+        border-radius: 14px;
+        background: var(--m-surface);
+        color: var(--m-text);
+        box-shadow: var(--shadow);
+      }
+
+      .weekend svg {
+        display: block;
+        width: 100%;
+        height: 92px;
+      }
+
+      .scene .sky {
+        fill: var(--sky);
+      }
+
+      .scene .sun {
+        fill: #fab005;
+      }
+
+      .scene .far {
+        fill: var(--hill-far);
+      }
+
+      .scene .near {
+        fill: var(--hill-near);
+      }
+
+      .scene .fall {
+        fill: var(--map-water);
+      }
+
+      .weekend-body {
+        display: grid;
+        gap: 2px;
+        padding: 12px 14px 14px;
+        line-height: 1.3;
+      }
+
+      .weekend-body small {
+        color: var(--m-muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .weekend-body b {
+        font-size: 18px;
+      }
+
+      .weekend-body > span {
+        color: var(--m-muted);
+        font-size: 13px;
+      }
+
+      .weekend-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .weekend-actions span {
+        flex: 1;
+        padding: 8px;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .weekend-actions .go {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      .weekend-actions .again {
+        box-shadow: inset 0 0 0 1px var(--m-border);
       }
 
       /* Features */
@@ -1426,8 +1805,9 @@
           Directii
         </a>
         <nav class="nav" aria-label="Secțiuni" data-i18n-label="nav.label">
-          <a href="#functii" data-i18n="nav.features">Funcții</a>
-          <a href="#comunitate" data-i18n="nav.community">Comunitate</a>
+          <a href="#social">Social</a>
+          <a href="#navigare" data-i18n="nav.navigation">Navigare</a>
+          <a href="#rapoarte" data-i18n="nav.reports">Rapoarte</a>
           <a href="#android">Android</a>
         </nav>
         <div class="lang" role="group" aria-label="Limbă" data-i18n-label="lang.label">
@@ -1443,10 +1823,10 @@
         <div class="wrap">
           <div>
             <p class="pill" data-i18n="hero.pill">Navigare comunitară pe OpenStreetMap</p>
-            <h1 data-i18n="hero.title">Navigare simplă, <span class="hl">cu ochii tuturor pe drum.</span></h1>
+            <h1 data-i18n="hero.title">Prima rețea <span class="hl">socială auto.</span></h1>
             <p class="lead" data-i18n="hero.lead">
-              Directii îți găsește traseul, te ghidează cu voce viraj cu viraj și te anunță din timp ce au raportat ceilalți
-              șoferi: trafic, poliție, accidente, pericole.
+              Directii e locul șoferilor: pe drum te ghidează cu voce și te anunță ce au raportat ceilalți. În curând îți
+              adaugi mașinile, vezi unde merge lumea și primești o idee de drum pentru weekend.
             </p>
             <div class="actions">
               <a class="btn btn-primary" href="https://aplicatia.directii.ro">
@@ -1455,7 +1835,7 @@
                   <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
               </a>
-              <a class="btn btn-ghost" href="#functii" data-i18n="hero.more">Vezi ce poate</a>
+              <a class="btn btn-ghost" href="#social" data-i18n="hero.more">Descoperă</a>
             </div>
             <p class="note">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1466,7 +1846,12 @@
           </div>
 
           <div class="hero-visual">
-            <div class="float-toast" aria-hidden="true" data-i18n="mock.toast">Raport trimis: Pericol. Mulțumim!</div>
+            <div class="float float-trend" aria-hidden="true" data-i18n="float.trend">🔥 În trend: Transfăgărășan</div>
+            <div class="float float-car" aria-hidden="true">
+              <span>🚙</span>
+              <div><b>Dacia Duster</b><small data-i18n="float.garage">Garajul meu</small></div>
+              <span class="plate"><i>RO</i><span>B 00 DIR</span></span>
+            </div>
 
             <!-- The app on a trip, drawn like the real thing (aplicatia/src/index.html): the
                  "reported ahead" alert, the compass, speed, buttons, turn banner and trip stats. -->
@@ -1530,8 +1915,8 @@
                   <path class="route" d="M140,300 L140,180 L290,164" />
 
                   <!-- A hazard someone else reported -->
-                  <circle cx="52" cy="152" r="12" fill="#fab005" stroke="#fff" stroke-width="2.5" />
-                  <text class="emoji" x="52" y="152.5" font-size="11">⚠️</text>
+                  <circle cx="100" cy="363" r="12" fill="#fab005" stroke="#fff" stroke-width="2.5" />
+                  <text class="emoji" x="100" y="363.5" font-size="11">⚠️</text>
 
                   <!-- A map comment -->
                   <g transform="translate(198 300)">
@@ -1626,10 +2011,101 @@
         </div>
       </section>
 
-      <section class="section band" id="functii">
+      <!-- What makes it a social network. None of it is in the app yet: ../todo.md has the plan,
+           and each card says "În curând" until its feature ships. -->
+      <section class="section band" id="social">
         <div class="wrap">
           <div class="section-head">
-            <p class="kicker" data-i18n="nav.features">Funcții</p>
+            <p class="kicker" data-i18n="social.kicker">Rețea socială auto</p>
+            <h2 data-i18n="social.title">Mai mult decât o hartă.</h2>
+            <p data-i18n="social.lead">
+              Directii devine locul unde se întâlnesc șoferii: cu mașinile lor, cu locurile în care merg și cu idei de drum.
+              Iată ce urmează.
+            </p>
+          </div>
+
+          <div class="social">
+            <article class="social-card">
+              <div class="social-visual" aria-hidden="true">
+                <p class="v-label" data-i18n="float.garage">Garajul meu</p>
+                <div class="garage">
+                  <div class="garage-row">
+                    <span>🚙</span>
+                    <div><b>Dacia Duster</b><small>2021</small></div>
+                    <span class="plate"><i>RO</i><span>B 00 DIR</span></span>
+                  </div>
+                  <div class="garage-row">
+                    <span>🚗</span>
+                    <div><b>Volkswagen Golf</b><small>2016</small></div>
+                    <span class="plate"><i>RO</i><span>CJ 00 ABC</span></span>
+                  </div>
+                  <div class="garage-add" data-i18n="social.garage.add">+ Adaugă o mașină</div>
+                </div>
+              </div>
+              <span class="badge soon" data-i18n="soon">În curând</span>
+              <h3 data-i18n="social.garage.t">Garajul tău</h3>
+              <p data-i18n="social.garage.p">
+                Adaugă-ți mașinile, cu marcă, model și număr de înmatriculare, și arată-le pe profilul tău.
+              </p>
+            </article>
+
+            <article class="social-card">
+              <div class="social-visual" aria-hidden="true">
+                <div class="trend-card">
+                  <b data-i18n="social.trend.head">🔥 În trend săptămâna asta</b>
+                  <ol class="trend">
+                    <li><div><b>Transfăgărășan</b><small>Sibiu · Argeș</small></div><i style="--w: 100%"></i></li>
+                    <li><div><b>Vama Veche</b><small>Constanța</small></div><i style="--w: 76%"></i></li>
+                    <li><div><b>Sinaia</b><small>Prahova</small></div><i style="--w: 58%"></i></li>
+                    <li><div><b>Cheile Turzii</b><small>Cluj</small></div><i style="--w: 41%"></i></li>
+                  </ol>
+                </div>
+              </div>
+              <span class="badge soon" data-i18n="soon">În curând</span>
+              <h3 data-i18n="social.trend.t">Unde merge lumea</h3>
+              <p data-i18n="social.trend.p">
+                Vezi locurile în trend: unde merg acum cei mai mulți șoferi Directii, lângă tine și în toată țara.
+              </p>
+            </article>
+
+            <article class="social-card">
+              <div class="social-visual" aria-hidden="true">
+                <div class="weekend">
+                  <svg class="scene" viewBox="0 0 300 92" preserveAspectRatio="xMidYMid slice">
+                    <rect class="sky" width="300" height="92" />
+                    <circle class="sun" cx="236" cy="28" r="13" />
+                    <path class="far" d="M0,66 40,36 78,58 120,22 168,56 210,36 256,62 300,40 300,92 0,92Z" />
+                    <path class="fall" d="M146,44 154,44 160,92 140,92Z" />
+                    <path class="near" d="M0,78 60,60 120,76 140,72 140,92 0,92Z M160,72 180,56 240,74 300,62 300,92 160,92Z" />
+                  </svg>
+                  <div class="weekend-body">
+                    <small data-i18n="social.weekend.label">🎲 Ideea ta de weekend</small>
+                    <b>Cascada Bigăr</b>
+                    <span data-i18n="social.weekend.where">Caraș-Severin · la 3 h de tine</span>
+                    <div class="weekend-actions">
+                      <span class="go" data-i18n="social.weekend.go">Pornește</span>
+                      <span class="again" data-i18n="social.weekend.again">🎲 Altă idee</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="badge soon" data-i18n="soon">În curând</span>
+              <h3 data-i18n="social.weekend.t">Unde mergem în weekend?</h3>
+              <p data-i18n="social.weekend.p">
+                Nu știi unde să mergi? Apeși un buton și Directii îți propune un loc de vizitat, cu traseul gata făcut.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="navigare">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="kicker">
+              <span data-i18n="nav.navigation">Navigare</span>
+              <span class="badge now" data-i18n="now">Disponibil acum</span>
+            </p>
             <h2 data-i18n="features.title">Tot ce-ți trebuie la volan. Nimic în plus.</h2>
             <p data-i18n="features.lead">
               O aplicație de navigare ușoară, construită pe harta liberă OpenStreetMap și pe ce raportează șoferii.
@@ -1724,7 +2200,9 @@
                 </svg>
               </div>
               <h3 data-i18n="f.account.t">Cont doar dacă vrei</h3>
-              <p data-i18n="f.account.p">Harta merge la fel și fără cont. Dacă vrei unul, intri cu emailul sau cu Google.</p>
+              <p data-i18n="f.account.p">
+                Harta merge la fel și fără cont. Cu unul, prin email sau Google, îți vei putea adăuga mașinile când apare garajul.
+              </p>
             </article>
             <article class="feature">
               <div class="ic">
@@ -1742,10 +2220,10 @@
         </div>
       </section>
 
-      <section class="section" id="comunitate">
+      <section class="section band" id="rapoarte">
         <div class="wrap split">
           <div class="split-text">
-            <p class="kicker" data-i18n="nav.community">Comunitate</p>
+            <p class="kicker" data-i18n="nav.reports">Rapoarte</p>
             <h2 data-i18n="community.title">Rapoarte de la șoferi, pentru șoferi.</h2>
             <p data-i18n="community.lead">
               Ai văzut ceva pe drum? Spune-le și celorlalți. Fiecare raport ajută pe cineva care vine din urmă.
@@ -1813,7 +2291,7 @@
         </div>
       </section>
 
-      <section class="section band" id="android">
+      <section class="section" id="android">
         <div class="wrap split">
           <div class="split-visual">
             <div
@@ -1956,7 +2434,7 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section band">
         <div class="wrap">
           <div class="osm">
             <div class="ic">
@@ -1980,7 +2458,9 @@
           <div class="cta">
             <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M256 96 380 404 256 336 132 404z" fill="#fff" /></svg>
             <h2 data-i18n="cta.title">Unde mergem?</h2>
-            <p data-i18n="cta.text">Deschide harta, caută destinația și pornește la drum.</p>
+            <p data-i18n="cta.text">
+              Deschide aplicația și fă-ți cont: când apare garajul, ești printre primii care își adaugă mașina.
+            </p>
             <a class="btn" href="https://aplicatia.directii.ro">
               <span data-i18n="open">Deschide aplicația</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -2006,25 +2486,45 @@
       // English for the page. Keys are the data-i18n (text) and data-i18n-label (aria-label) names
       // above; the Romanian is in the markup. Wording follows the app's locales (aplicatia/src/js/locales).
       const EN = {
-        'meta.title': 'Directii · Community navigation on OpenStreetMap',
+        'meta.title': 'Directii · The first auto social network',
         'meta.description':
-          'Directii finds your route, talks you through it turn by turn, and warns you early about what other drivers have reported: traffic, police, crashes, hazards.',
+          'Directii, the first auto social network: voice navigation and live reports from drivers. Coming soon: your garage, trending places and weekend trip ideas.',
         skip: 'Skip to content',
         'nav.label': 'Sections',
-        'nav.features': 'Features',
-        'nav.community': 'Community',
+        'nav.navigation': 'Navigation',
+        'nav.reports': 'Reports',
         'lang.label': 'Language',
         open: 'Open the app',
+        soon: 'Coming soon',
+        now: 'Available now',
 
         'hero.pill': 'Community navigation on OpenStreetMap',
-        'hero.title': 'Simple navigation, <span class="hl">with everyone’s eyes on the road.</span>',
+        'hero.title': 'The first <span class="hl">auto social network.</span>',
         'hero.lead':
-          'Directii finds your route, talks you through it turn by turn, and warns you early about what other drivers have reported: traffic, police, crashes, hazards.',
-        'hero.more': 'See what it does',
+          'Directii is where drivers meet: on the road it guides you by voice and warns you about what others have reported. Soon you’ll add your cars, see where everyone’s going, and get an idea for a weekend trip.',
+        'hero.more': 'Discover',
         'hero.note': 'Works in the browser, on your phone and your computer. No install, no account.',
+        'float.trend': '🔥 Trending: Transfăgărășan',
+        'float.garage': 'My garage',
+
+        'social.kicker': 'Auto social network',
+        'social.title': 'More than a map.',
+        'social.lead':
+          'Directii is becoming the place where drivers meet: with their cars, the places they go, and ideas for the road. Here’s what’s coming.',
+        'social.garage.add': '+ Add a car',
+        'social.garage.t': 'Your garage',
+        'social.garage.p': 'Add your cars, with make, model and plate number, and show them on your profile.',
+        'social.trend.head': '🔥 Trending this week',
+        'social.trend.t': 'Where everyone’s going',
+        'social.trend.p': 'See the trending places: where the most Directii drivers are heading right now, near you and across the country.',
+        'social.weekend.label': '🎲 Your weekend idea',
+        'social.weekend.where': 'Caraș-Severin · 3 h away',
+        'social.weekend.go': 'Go',
+        'social.weekend.again': '🎲 Another idea',
+        'social.weekend.t': 'Where to this weekend?',
+        'social.weekend.p': 'Not sure where to go? Tap a button and Directii suggests a place to visit, with the route ready.',
 
         'mock.label': 'Directii on a trip: police reported ahead, a right turn in 200 meters, arriving at 18:42.',
-        'mock.toast': 'Hazard reported. Thanks!',
         'mock.alert': 'Police reported ahead',
         'mock.alertMeta': 'in 600 m · 4 min ago',
         'mock.step': 'Turn right onto Calea Victoriei',
@@ -2052,7 +2552,8 @@
         'f.theme.t': 'Day or night, Romanian or English',
         'f.theme.p': 'Light, dark or system theme. The screen stays on while you drive.',
         'f.account.t': 'An account only if you want one',
-        'f.account.p': 'The map works just the same without one. If you want one, sign in with email or Google.',
+        'f.account.p':
+          'The map works just the same without one. With one, by email or Google, you’ll be able to add your cars when the garage arrives.',
         'f.install.t': 'Like an installed app',
         'f.install.p': 'Add it to your home screen straight from the browser. It opens <code>geo:</code> links to places too.',
 
@@ -2099,7 +2600,7 @@
           'The map comes from OpenStreetMap, the free map of the world made by volunteers. Directii adds what drivers are seeing on the road today.',
         'osm.link': 'About OpenStreetMap',
         'cta.title': 'Where to?',
-        'cta.text': 'Open the map, search for your destination and hit the road.',
+        'cta.text': 'Open the app and create an account: when the garage arrives, you’ll be among the first to add your car.',
         'footer.osm': 'Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
       };
 
