@@ -175,6 +175,11 @@
         margin-inline: auto;
       }
 
+      /* The app's icons, used across the page (see the sprite after <body>); it takes no room. */
+      .sprite {
+        position: absolute;
+      }
+
       .skip {
         position: absolute;
         left: 16px;
@@ -602,13 +607,12 @@
         letter-spacing: 0.06em;
       }
 
-      .map .me {
+      /* You, as in the app: a big arrow on the road, outlined in white. */
+      .map .me-arrow {
         fill: var(--accent);
-      }
-
-      .map .halo {
-        fill: var(--accent);
-        opacity: 0.16;
+        stroke: #fff;
+        stroke-width: 3.5;
+        stroke-linejoin: round;
       }
 
       .map .marker-ring {
@@ -616,26 +620,9 @@
         stroke-width: 2;
       }
 
-      .map .emoji {
-        font-size: 13px;
-        text-anchor: middle;
-        dominant-baseline: central;
-      }
-
-      .map .bubble {
-        fill: var(--m-surface);
-        stroke: var(--m-border);
-      }
-
       @media (prefers-reduced-motion: no-preference) {
         .map .pulse {
           animation: pulse 2.6s ease-out infinite;
-          transform-box: fill-box;
-          transform-origin: center;
-        }
-
-        .map .halo {
-          animation: breathe 3.2s ease-in-out infinite;
           transform-box: fill-box;
           transform-origin: center;
         }
@@ -648,12 +635,6 @@
           to {
             transform: scale(1.9);
             opacity: 0;
-          }
-        }
-
-        @keyframes breathe {
-          50% {
-            transform: scale(1.18);
           }
         }
       }
@@ -704,7 +685,9 @@
       }
 
       .m-alert .ic {
-        font-size: 20px;
+        flex: none;
+        width: 30px;
+        height: 30px;
       }
 
       .m-alert .body {
@@ -1432,23 +1415,17 @@
         gap: 8px;
         padding: 14px 6px;
         border-radius: 14px;
-        box-shadow: inset 0 0 0 1px var(--m-border);
+        background: color-mix(in srgb, var(--c) 10%, transparent);
+        box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--c) 40%, transparent);
         font-size: 14px;
         font-weight: 600;
         text-align: center;
         line-height: 1.2;
       }
 
-      .type i {
-        display: grid;
-        place-items: center;
+      .type svg {
         width: 46px;
         height: 46px;
-        border-radius: 50%;
-        background: color-mix(in srgb, var(--c) 16%, var(--m-surface));
-        box-shadow: inset 0 0 0 2px var(--c);
-        font-size: 22px;
-        font-style: normal;
       }
 
       .dialog-actions {
@@ -1458,6 +1435,17 @@
         color: var(--m-muted);
         font-size: 14px;
         font-weight: 600;
+      }
+
+      .dialog-actions .with-icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .dialog-actions .with-icon svg {
+        width: 18px;
+        height: 18px;
       }
 
       .alert-mock {
@@ -1481,8 +1469,10 @@
         gap: 12px;
       }
 
-      .alert-mock .top span {
-        font-size: 28px;
+      .alert-mock .top svg {
+        flex: none;
+        width: 40px;
+        height: 40px;
       }
 
       .alert-mock b {
@@ -1796,6 +1786,51 @@
     English text in EN at the bottom, and data-i18n-label an English aria-label.
   -->
   <body>
+    <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
+      <defs>
+        <!-- The app's icons (aplicatia/src/js/report-types.js and icons.js), to <use>: report pins
+             (pin-*, 36×44, the tip at 18,42 on the spot), round badges (badge-*) and the comment bubble. -->
+        <path id="car" d="M8.6 4.5H15.4A1.6 1.6 0 0 1 16.9 5.55L18.4 10H19A2 2 0 0 1 21 12V16A1.5 1.5 0 0 1 19.5 17.5V19A1 1 0 0 1 18.5 20H17.5A1 1 0 0 1 16.5 19V17.5H7.5V19A1 1 0 0 1 6.5 20H5.5A1 1 0 0 1 4.5 19V17.5A1.5 1.5 0 0 1 3 16V12A2 2 0 0 1 5 10H5.6L7.1 5.55A1.6 1.6 0 0 1 8.6 4.5ZM9.4 6.2H14.6A.8.8 0 0 1 15.35 6.75L16.2 9H7.8L8.65 6.75A.8.8 0 0 1 9.4 6.2ZM5.2 13.4a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0-2.8 0ZM16 13.4a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0-2.8 0ZM10 12.7H14A.7.7 0 0 1 14 14.1H10A.7.7 0 0 1 10 12.7Z" />
+        <path id="car-outline" d="M8.6 4.5H15.4A1.6 1.6 0 0 1 16.9 5.55L18.4 10H19A2 2 0 0 1 21 12V16A1.5 1.5 0 0 1 19.5 17.5V19A1 1 0 0 1 18.5 20H17.5A1 1 0 0 1 16.5 19V17.5H7.5V19A1 1 0 0 1 6.5 20H5.5A1 1 0 0 1 4.5 19V17.5A1.5 1.5 0 0 1 3 16V12A2 2 0 0 1 5 10H5.6L7.1 5.55A1.6 1.6 0 0 1 8.6 4.5Z" />
+        <filter id="drop" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="1.5" stdDeviation="1.2" flood-opacity="0.35" /></filter>
+        <symbol id="glyph-traffic" viewBox="0 0 24 24">
+          <g transform="translate(9.88 -1.18) scale(0.44)"><use href="#car" fill="#fff" fill-rule="evenodd" /></g>
+          <g transform="translate(6.72 2.38) scale(0.56)"><use href="#car-outline" fill="#fa5252" stroke="#fa5252" stroke-width="5.714" stroke-linejoin="round" /><use href="#car" fill="#fff" fill-rule="evenodd" /></g>
+          <g transform="translate(1.62 6.78) scale(0.76)"><use href="#car-outline" fill="#fa5252" stroke="#fa5252" stroke-width="4.211" stroke-linejoin="round" /><use href="#car" fill="#fff" fill-rule="evenodd" /></g>
+        </symbol>
+        <symbol id="badge-traffic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#fa5252" /><use href="#glyph-traffic" x="4.2" y="4.2" width="15.6" height="15.6" /></symbol>
+        <symbol id="pin-traffic" viewBox="0 0 36 44"><path d="M18 42 6 26A15 15 0 1 1 30 26Z" fill="#fa5252" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" /><use href="#glyph-traffic" x="7.8" y="6.8" width="20.4" height="20.4" /></symbol>
+        <symbol id="glyph-police" viewBox="0 0 24 24">
+          <g transform="translate(0.81 2.215) scale(0.93)"><use href="#car" fill="#fff" fill-rule="evenodd" /></g>
+          <path d="M8.4 1.8H15.6A1.6 1.6 0 0 1 17.2 3.4V5.6A1.2 1.2 0 0 1 16 6.8H8A1.2 1.2 0 0 1 6.8 5.6V3.4A1.6 1.6 0 0 1 8.4 1.8Z" fill="#fff" fill-rule="evenodd" />
+          <path d="M8.7 3.1H11.5V5.6H8.7A.8.8 0 0 1 7.9 4.8V3.9A.8.8 0 0 1 8.7 3.1Z" fill="#f03e3e" fill-rule="evenodd" />
+          <path d="M12.5 3.1H15.3A.8.8 0 0 1 16.1 3.9V4.8A.8.8 0 0 1 15.3 5.6H12.5Z" fill="#1c7ed6" fill-rule="evenodd" />
+        </symbol>
+        <symbol id="badge-police" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#2449af" /><use href="#glyph-police" x="4.2" y="4.2" width="15.6" height="15.6" /></symbol>
+        <symbol id="pin-police" viewBox="0 0 36 44"><path d="M18 42 6 26A15 15 0 1 1 30 26Z" fill="#2449af" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" /><use href="#glyph-police" x="7.8" y="6.8" width="20.4" height="20.4" /></symbol>
+        <symbol id="glyph-crash" viewBox="0 0 24 24">
+          <path d="M12 1.7L13.92 7.04L17.79 5.41L17.2 9.3L22.05 10.53L17.32 13.24L19.45 16.6L15.92 16.97L15.69 22.45L12 17.8L8.85 20.95L8.21 16.82L3.51 17.2L6.49 13.27L3.33 10.77L6.8 9.3L5.32 4.33L10.12 7.13ZM12 7L12.96 9.67L14.89 8.85L14.6 10.8L17.02 11.41L14.66 12.77L15.72 14.45L13.96 14.64L13.85 17.37L12 15.05L10.43 16.62L10.1 14.56L7.76 14.75L9.24 12.79L7.67 11.54L9.4 10.8L8.66 8.32L11.06 9.72Z" fill="#fff" fill-rule="evenodd" />
+        </symbol>
+        <symbol id="badge-crash" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#c92a2a" /><use href="#glyph-crash" x="4.2" y="4.2" width="15.6" height="15.6" /></symbol>
+        <symbol id="pin-crash" viewBox="0 0 36 44"><path d="M18 42 6 26A15 15 0 1 1 30 26Z" fill="#c92a2a" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" /><use href="#glyph-crash" x="7.8" y="6.8" width="20.4" height="20.4" /></symbol>
+        <symbol id="glyph-hazard" viewBox="0 0 24 24">
+          <path d="M10.3 4.2A2 2 0 0 1 13.7 4.2L21.3 17.4A2 2 0 0 1 19.6 20.4H4.4A2 2 0 0 1 2.7 17.4ZM10.9 9.2A1.1 1.1 0 0 1 13.1 9.2L12.75 14.2A.75.75 0 0 1 11.25 14.2ZM10.9 17.1a1.1 1.1 0 1 0 2.2 0a1.1 1.1 0 1 0-2.2 0Z" fill="#2b2200" fill-rule="evenodd" />
+        </symbol>
+        <symbol id="badge-hazard" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#fab005" /><use href="#glyph-hazard" x="4.2" y="4.2" width="15.6" height="15.6" /></symbol>
+        <symbol id="pin-hazard" viewBox="0 0 36 44"><path d="M18 42 6 26A15 15 0 1 1 30 26Z" fill="#fab005" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" /><use href="#glyph-hazard" x="7.8" y="6.8" width="20.4" height="20.4" /></symbol>
+        <symbol id="glyph-closure" viewBox="0 0 24 24">
+          <path d="M4 6.5H20A1.5 1.5 0 0 1 21.5 8V12.5A1.5 1.5 0 0 1 20 14H18.5V19H20A.75.75 0 0 1 20 20.5H14.5A.75.75 0 0 1 14.5 19H16V14H8V19H9.5A.75.75 0 0 1 9.5 20.5H4A.75.75 0 0 1 4 19H5.5V14H4A1.5 1.5 0 0 1 2.5 12.5V8A1.5 1.5 0 0 1 4 6.5ZM6.9 8H9.5L6.5 12.5H3.9ZM12.1 8H14.7L11.7 12.5H9.1ZM17.3 8H19.9L16.9 12.5H14.3Z" fill="#fff" fill-rule="evenodd" />
+        </symbol>
+        <symbol id="badge-closure" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#7950f2" /><use href="#glyph-closure" x="4.2" y="4.2" width="15.6" height="15.6" /></symbol>
+        <symbol id="pin-closure" viewBox="0 0 36 44"><path d="M18 42 6 26A15 15 0 1 1 30 26Z" fill="#7950f2" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" /><use href="#glyph-closure" x="7.8" y="6.8" width="20.4" height="20.4" /></symbol>
+        <symbol id="glyph-camera" viewBox="0 0 24 24">
+          <path d="M8.2 5H15.8A1.5 1.5 0 0 1 17.1 5.75L18 7.3H19.5A2 2 0 0 1 21.5 9.3V17.5A2 2 0 0 1 19.5 19.5H4.5A2 2 0 0 1 2.5 17.5V9.3A2 2 0 0 1 4.5 7.3H6L6.9 5.75A1.5 1.5 0 0 1 8.2 5ZM7.7 13.4a4.3 4.3 0 1 0 8.6 0a4.3 4.3 0 1 0-8.6 0ZM9.6 13.4a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0-4.8 0ZM17.6 10a.9.9 0 1 0 1.8 0a.9.9 0 1 0-1.8 0Z" fill="#fff" fill-rule="evenodd" />
+        </symbol>
+        <symbol id="badge-camera" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#12b886" /><use href="#glyph-camera" x="4.2" y="4.2" width="15.6" height="15.6" /></symbol>
+        <symbol id="pin-camera" viewBox="0 0 36 44"><path d="M18 42 6 26A15 15 0 1 1 30 26Z" fill="#12b886" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" /><use href="#glyph-camera" x="7.8" y="6.8" width="20.4" height="20.4" /></symbol>
+        <symbol id="pin-comment" viewBox="0 0 36 44"><path d="M12 4H24A10 10 0 0 1 34 14V24A10 10 0 0 1 24 34H22.5L18 42L13.5 34H12A10 10 0 0 1 2 24V14A10 10 0 0 1 12 4Z" fill="#34c759" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" /><path d="M6.5 8.5H17.5A1.5 1.5 0 0 1 17.5 11.5H6.5A1.5 1.5 0 0 1 6.5 8.5ZM6.5 13.5H13.5A1.5 1.5 0 0 1 13.5 16.5H6.5A1.5 1.5 0 0 1 6.5 13.5Z" transform="translate(7.2 8.2) scale(.9)" fill="#fff" fill-rule="evenodd" /></symbol>
+      </defs>
+    </svg>
     <a class="skip" href="#main" data-i18n="skip">Sari la conținut</a>
 
     <header class="site-header">
@@ -1914,26 +1949,19 @@
                   <path class="route-casing" d="M140,300 L140,180 L290,164" />
                   <path class="route" d="M140,300 L140,180 L290,164" />
 
+                  <!-- Pins (the sprite's, 26 wide here) stand with their tip on the spot. -->
                   <!-- A hazard someone else reported -->
-                  <circle cx="100" cy="363" r="12" fill="#fab005" stroke="#fff" stroke-width="2.5" />
-                  <text class="emoji" x="100" y="363.5" font-size="11">⚠️</text>
+                  <use href="#pin-hazard" x="87" y="332.7" width="26" height="31.8" filter="url(#drop)" />
 
                   <!-- A map comment -->
-                  <g transform="translate(198 300)">
-                    <path class="bubble" d="M-13,-26 h26 a5,5 0 0 1 5,5 v14 a5,5 0 0 1 -5,5 h-9 l-4,6 l-4,-6 h-9 a5,5 0 0 1 -5,-5 v-14 a5,5 0 0 1 5,-5z" />
-                    <text class="emoji" x="0" y="-14" font-size="11">💬</text>
-                  </g>
+                  <use href="#pin-comment" x="185" y="273.7" width="26" height="31.8" filter="url(#drop)" />
 
                   <!-- Police, on the route ahead: the alert at the top is about this one -->
-                  <circle class="marker-ring pulse" cx="236" cy="170" r="13" stroke="#2449af" />
-                  <circle cx="236" cy="170" r="13" fill="#2449af" stroke="#fff" stroke-width="2.5" />
-                  <text class="emoji" x="236" y="170.5">👮</text>
+                  <circle class="marker-ring pulse" cx="236" cy="152" r="12" stroke="#2449af" />
+                  <use href="#pin-police" x="223" y="139.7" width="26" height="31.8" filter="url(#drop)" />
 
-                  <!-- You: heading up, because the map turns with the car -->
-                  <circle class="halo" cx="140" cy="300" r="30" />
-                  <circle cx="140" cy="300" r="15" fill="#fff" />
-                  <circle class="me" cx="140" cy="300" r="12" />
-                  <path d="M140,291 L146.5,307 L140,303.5 L133.5,307 Z" fill="#fff" />
+                  <!-- You: the app's arrow, heading up, because the map turns with the car -->
+                  <path class="me-arrow" transform="translate(140 300) scale(.95)" d="M0-20 16 15 0 7-16 15Z" filter="url(#drop)" />
                 </svg>
 
                 <div class="island"></div>
@@ -1951,7 +1979,7 @@
                 </div>
 
                 <div class="m-alert m-card">
-                  <span class="ic">👮</span>
+                  <svg class="ic"><use href="#badge-police" /></svg>
                   <div class="body">
                     <b data-i18n="mock.alert">Poliție în față</b>
                     <small data-i18n="mock.alertMeta">peste 600 m · acum 4 min</small>
@@ -2261,21 +2289,26 @@
               <div class="dialog-mock" aria-hidden="true">
                 <h3 data-i18n="demo.title">Ce e pe drum?</h3>
                 <div class="types">
-                  <div class="type" style="--c: #fa5252"><i>🚗</i><span data-i18n="type.traffic">Trafic</span></div>
-                  <div class="type" style="--c: #2449af"><i>👮</i><span data-i18n="type.police">Poliție</span></div>
-                  <div class="type" style="--c: #c92a2a"><i>💥</i><span data-i18n="type.crash">Accident</span></div>
-                  <div class="type" style="--c: #fab005"><i>⚠️</i><span data-i18n="type.hazard">Pericol</span></div>
-                  <div class="type" style="--c: #7950f2"><i>⛔</i><span data-i18n="type.closure">Drum închis</span></div>
-                  <div class="type" style="--c: #12b886"><i>📷</i><span data-i18n="type.camera">Cameră</span></div>
+                  <div class="type" style="--c: #fa5252"><svg><use href="#badge-traffic" /></svg><span data-i18n="type.traffic">Trafic</span></div>
+                  <div class="type" style="--c: #2449af"><svg><use href="#badge-police" /></svg><span data-i18n="type.police">Poliție</span></div>
+                  <div class="type" style="--c: #c92a2a"><svg><use href="#badge-crash" /></svg><span data-i18n="type.crash">Accident</span></div>
+                  <div class="type" style="--c: #fab005"><svg><use href="#badge-hazard" /></svg><span data-i18n="type.hazard">Pericol</span></div>
+                  <div class="type" style="--c: #7950f2"><svg><use href="#badge-closure" /></svg><span data-i18n="type.closure">Drum închis</span></div>
+                  <div class="type" style="--c: #12b886"><svg><use href="#badge-camera" /></svg><span data-i18n="type.camera">Cameră</span></div>
                 </div>
                 <div class="dialog-actions">
-                  <span data-i18n="demo.comment">💬 Comentariu</span>
+                  <span class="with-icon">
+                    <svg viewBox="0 0 24 24" fill="#34c759" fill-rule="evenodd">
+                      <path d="M6 3.5H18A3.5 3.5 0 0 1 21.5 7V14A3.5 3.5 0 0 1 18 17.5H11.5L7 21V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5ZM7 7.5H17A1 1 0 0 1 17 9.5H7A1 1 0 0 1 7 7.5ZM7 11.5H13A1 1 0 0 1 13 13.5H7A1 1 0 0 1 7 11.5Z" />
+                    </svg>
+                    <span data-i18n="demo.comment">Comentariu</span>
+                  </span>
                   <span data-i18n="demo.cancel">Anulează</span>
                 </div>
               </div>
               <div class="alert-mock" aria-hidden="true">
                 <div class="top">
-                  <span>💥</span>
+                  <svg><use href="#badge-crash" /></svg>
                   <div>
                     <b data-i18n="demo.alert">Accident în față</b>
                     <small data-i18n="demo.alertMeta">peste 1,2 km · acum 9 min</small>
@@ -2352,12 +2385,8 @@
                     <g class="major"><use href="#c-a" /><use href="#c-b" /></g>
                     <path class="route-casing" d="M290,196 L290,118 L-10,134" />
                     <path class="route" d="M290,196 L290,118 L-10,134" />
-                    <circle cx="214" cy="122" r="11" fill="#fa5252" stroke="#fff" stroke-width="2.5" />
-                    <text class="emoji" x="214" y="122.5" font-size="11">🚗</text>
-                    <circle class="halo" cx="290" cy="196" r="24" />
-                    <circle cx="290" cy="196" r="13" fill="#fff" />
-                    <circle class="me" cx="290" cy="196" r="10.5" />
-                    <path d="M290,188.5 L295.5,202 L290,199 L284.5,202 Z" fill="#fff" />
+                    <use href="#pin-traffic" x="202" y="94" width="24" height="29.3" filter="url(#drop)" />
+                    <path class="me-arrow" transform="translate(290 196) scale(.8)" d="M0-20 16 15 0 7-16 15Z" filter="url(#drop)" />
                   </svg>
                   <div class="car-cards">
                     <div class="m-banner">
@@ -2573,7 +2602,7 @@
         'type.hazard': 'Hazard',
         'type.closure': 'Road closed',
         'type.camera': 'Camera',
-        'demo.comment': '💬 Comment',
+        'demo.comment': 'Comment',
         'demo.cancel': 'Cancel',
         'demo.alert': 'Crash reported ahead',
         'demo.alertMeta': 'in 1.2 km · 9 min ago',
